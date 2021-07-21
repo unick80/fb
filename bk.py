@@ -13,21 +13,29 @@ except:
   json="Error parser json"
   exit()
 else:
-  announcements = json['announcements']
+  jsports = json['sports']
+  sports = {}
+  for i in range(len(jsports)):
+    if "Футбол" in jsports[i]['name']:
+      sports[jsports[i]['id']] = jsports[i]['name']
+  events = json['events']
   gamers = {}
-  for i in range(len(announcements)):
-    try:
-      team1 = announcements[i]['team1']
-    except:
-      team1 = ""
-    try:
-      team2 = announcements[i]['team2']
-    except:
-      team2 = ""
-    id = hashlib.md5(str(uuid.uuid4()).encode()).hexdigest()
-    gamer_name = team1+" - "+team2
-    gamers[id] = gamer_name
-
+  for i in range(len(events)):
+    sportId = events[i]['sportId']
+    place = events[i]['place']
+    if (sportId in sports) and (place == "live"):
+      try:
+        team1 = events[i]['team1']
+      except:
+        team1 = ""
+      try:
+        team2 = events[i]['team2']
+      except:
+        team2 = ""
+      id = hashlib.md5(str(uuid.uuid4()).encode()).hexdigest()
+      gamer_name = team1+" - "+team2
+      gamers[id] = gamer_name
+  print(gamers)
 driver = webdriver.Chrome()
 driver.get("https://www.fonbet.ru/live/")
 sleep(5)
